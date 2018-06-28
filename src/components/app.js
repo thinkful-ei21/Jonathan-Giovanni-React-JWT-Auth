@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router-dom';
 
-import store from '../store'
+import store from '../store';
 import HeaderBar from './header-bar';
 import LandingPage from './landing-page';
 import Dashboard from './dashboard';
@@ -12,39 +12,35 @@ import { refreshAuthToken, setWarning, clearAuth } from '../actions/auth';
 export class App extends React.Component {
   componentDidUpdate(prevProps) {
     if (!prevProps.loggedIn && this.props.loggedIn) {
+      console.log('Logged In');
       // When we are logged in, refresh the auth token periodically
       this.startPeriodicRefresh();
-      this.minutesSinceRefresh = 0
+      this.minutesSinceRefresh = 0;
       this.startIdleTimer();
-
     } else if (prevProps.loggedIn && !this.props.loggedIn) {
+      console.log('Logged Out');
       // Stop refreshing when we log out
       this.stopPeriodicRefresh();
       this.stopIdleTimer();
-
     }
   }
 
-
-  resetMinTimer(){
-    this.minutesSinceRefresh = 0
-    this.props.dispatch(setWarning(null))    
+  resetMinTimer() {
+    this.minutesSinceRefresh = 0;
+    this.props.dispatch(setWarning(null));
   }
 
-  startIdleTimer(){
-    this.idleTimer = setInterval(
-      () => {
-        this.minutesSinceRefresh ++
-        console.log(this.minutesSinceRefresh)
-        if(this.minutesSinceRefresh === 4){
-          this.props.dispatch(setWarning(true))
-        }
-        else if(this.minutesSinceRefresh === 5){
-          this.props.dispatch(clearAuth())
-          this.props.dispatch(setWarning(null))
-        }
+  startIdleTimer() {
+    this.idleTimer = setInterval(() => {
+      this.minutesSinceRefresh++;
+      console.log(this.minutesSinceRefresh);
+      if (this.minutesSinceRefresh === 4) {
+        this.props.dispatch(setWarning(true));
+      } else if (this.minutesSinceRefresh === 5) {
+        this.props.dispatch(clearAuth());
+        this.props.dispatch(setWarning(null));
       }
-      ,1*60*1000);
+    }, 1 * 60 * 1000);
   }
 
   stopIdleTimer() {
@@ -53,7 +49,6 @@ export class App extends React.Component {
     }
     clearInterval(this.idleTimer);
   }
-
 
   componentWillUnmount() {
     this.stopPeriodicRefresh();
@@ -76,12 +71,14 @@ export class App extends React.Component {
   }
 
   render() {
-    let warningDiv
-    if(this.props.warning){
-      warningDiv = (<div>
-                      <span>WARNING: You are about to be logged out due to inactivity</span>
-                      <button onClick={()=> this.resetMinTimer()}>Remain logged in</button>
-                  </div>)
+    let warningDiv;
+    if (this.props.warning) {
+      warningDiv = (
+        <div>
+          <span>WARNING: You are about to be logged out due to inactivity</span>
+          <button onClick={() => this.resetMinTimer()}>Remain logged in</button>
+        </div>
+      );
     }
     return (
       <div className="app">
