@@ -3,14 +3,16 @@ import {
   CLEAR_AUTH,
   AUTH_REQUEST,
   AUTH_SUCCESS,
-  AUTH_ERROR
+  AUTH_ERROR,
+  SET_WARNING
 } from '../actions/auth';
 
 const initialState = {
   authToken: null, // authToken !== null does not mean it has been validated
   currentUser: null,
   loading: false,
-  error: null
+  error: null,
+  warning: null
 };
 
 export default function reducer(state = initialState, action) {
@@ -38,6 +40,11 @@ export default function reducer(state = initialState, action) {
       loading: false,
       error: action.error
     });
-  }
+  } else if (action.type === SET_WARNING){
+    return Object.assign({}, state, {
+      warning: action.warning
+    })
+  } 
+
   return state;
 }

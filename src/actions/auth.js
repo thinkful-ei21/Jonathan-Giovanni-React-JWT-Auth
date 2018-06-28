@@ -33,13 +33,19 @@ export const authError = error => ({
   error
 });
 
+export const SET_WARNING = 'SET_WARNING';
+export const setWarning = warning => ({
+  type: SET_WARNING,
+  warning
+})
+
 // Stores the auth token in state and localStorage, and decodes and stores
 // the user data stored in the token
 const storeAuthInfo = (authToken, dispatch) => {
   const decodedToken = jwtDecode(authToken);
   dispatch(setAuthToken(authToken));
   dispatch(authSuccess(decodedToken.user));
-  saveAuthToken(authToken);
+  // saveAuthToken(authToken);
 };
 
 export const login = (username, password) => dispatch => {
